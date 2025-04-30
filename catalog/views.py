@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from catalog.models import Product
 
 
 def home(request):
+    products = Product.objects.order_by('-created_at')[:5]
+    print(products)
     return render(request, 'catalog/home.html')
 
 
