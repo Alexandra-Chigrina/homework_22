@@ -1,0 +1,18 @@
+[
+  {
+    "model": "catalog.category",
+    "pk": 1,
+    "fields": {
+      "name": "Рассылки",
+      "description": "Email и SMS рассылки для бизнеса"
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 2,
+    "fields": {
+      "name": "Веб-приложения",
+      "description": "Готовые решения на Django"
+    }
+  }
+]
