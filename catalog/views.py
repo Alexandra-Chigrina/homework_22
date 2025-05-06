@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 
-from catalog.models import Product
+from catalog.models import Product, Category
 
 
 def home(request):
@@ -29,3 +29,24 @@ def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     context = {'product': product}
     return render(request, 'catalog/product_detail.html', context)
+
+
+def add_product(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        description = request.POST.get("description")
+        image = request.FILES.get("image")
+        category_id = request.POST.get("category")
+        price = request.POST.get("price")
+
+        Product.objects.create(
+            name=name,
+            description=description,
+            image=image,
+            category_id=category_id,
+            price=price
+        )
+        return HttpResponse("Товар успешно добавлен!")
+
+    categories = Category.objects.all()
+    return render(request, "catalog/add_product.html", {"categories": categories})
