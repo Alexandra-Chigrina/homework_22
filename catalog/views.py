@@ -5,9 +5,10 @@ from catalog.models import Product
 
 
 def home(request):
-    products = Product.objects.order_by("-created_at")[:5]
-    print(products)
-    return render(request, "catalog/home.html")
+    print(Product.objects.order_by("-created_at")[:5])
+    products = Product.objects.all()
+    context = {'products': products}
+    return render(request, "catalog/home.html", context)
 
 
 def contacts(request):
