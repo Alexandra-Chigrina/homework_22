@@ -1,7 +1,8 @@
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
-from catalog.models import Product, Category
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
+
+from catalog.models import Category, Product
 
 
 def home(request):
@@ -11,9 +12,7 @@ def home(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    context = {
-        "page_obj": page_obj
-    }
+    context = {"page_obj": page_obj}
     return render(request, "catalog/home.html", context)
 
 
@@ -33,8 +32,8 @@ def contacts(request):
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    context = {'product': product}
-    return render(request, 'catalog/product_detail.html', context)
+    context = {"product": product}
+    return render(request, "catalog/product_detail.html", context)
 
 
 def add_product(request):
@@ -45,13 +44,7 @@ def add_product(request):
         category_id = request.POST.get("category")
         price = request.POST.get("price")
 
-        Product.objects.create(
-            name=name,
-            description=description,
-            image=image,
-            category_id=category_id,
-            price=price
-        )
+        Product.objects.create(name=name, description=description, image=image, category_id=category_id, price=price)
         return HttpResponse("Товар успешно добавлен!")
 
     categories = Category.objects.all()
