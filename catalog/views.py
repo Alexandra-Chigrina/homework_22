@@ -1,13 +1,19 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-
+from django.core.paginator import Paginator
 from catalog.models import Product, Category
 
 
 def home(request):
     print(Product.objects.order_by("-created_at")[:5])
-    products = Product.objects.all()
-    context = {'products': products}
+    product_list = Product.objects.order_by("-created_at")
+    paginator = Paginator(product_list, 6)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "page_obj": page_obj
+    }
     return render(request, "catalog/home.html", context)
 
 
