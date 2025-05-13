@@ -1,0 +1,32 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SkyStore Blog</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body>
+    <header class="bg-light border-bottom mb-4">
+        <div class="container py-3 d-flex justify-content-between align-items-center">
+            <h1 class="h4 mb-0">SkyStore Blog</h1>
+            <nav>
+                <a href="{% url 'blog:blog_list' %}" class="btn btn-outline-primary me-2">Блог</a>
+                <a href="{% url 'blog:blog_create' %}" class="btn btn-outline-secondary">Написать статью</a>
+            </nav>
+        </div>
+    </header>
+
+    {% block content %}
+    {% endblock %}
+
+    <footer class="bg-light border-top mt-5 py-4">
+        <div class="container text-center text-muted">
+            © 2025 SkyStore — блоговая платформа
+        </div>
+    </footer>
+
+    <script defer src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
