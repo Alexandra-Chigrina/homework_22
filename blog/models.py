@@ -1,9 +1,8 @@
 from django.db import models
 
+
 class Blog(models.Model):
-    title = models.CharField(
-        max_length=100, verbose_name="Заголовок", help_text="Введите заголовок статьи"
-    )
+    title = models.CharField(max_length=100, verbose_name="Заголовок", help_text="Введите заголовок статьи")
     content = models.TextField(verbose_name="Содержимое", help_text="Основной текст статьи")
     preview = models.ImageField(
         upload_to="blog/previews",
@@ -20,7 +19,7 @@ class Blog(models.Model):
     views_counter = models.PositiveIntegerField(
         verbose_name="Количество просмотров",
         help_text="Количество просмотров статьи (обновляется автоматически)",
-        default=0
+        default=0,
     )
 
     class Meta:

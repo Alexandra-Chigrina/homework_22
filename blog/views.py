@@ -1,12 +1,14 @@
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy, reverse
-from blog.models import Blog
-from django.core.mail import send_mail
 import os
 
+from django.core.mail import send_mail
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from dotenv import load_dotenv
 
+from blog.models import Blog
+
 load_dotenv(override=True)
+
 
 class BlogCreateView(CreateView):
     model = Blog
@@ -17,8 +19,8 @@ class BlogCreateView(CreateView):
 
 class BlogDetailView(DetailView):
     model = Blog
-    template_name = 'blog/blog_detail.html'
-    context_object_name = 'post'
+    template_name = "blog/blog_detail.html"
+    context_object_name = "post"
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
@@ -38,8 +40,8 @@ class BlogDetailView(DetailView):
 
 class BlogListView(ListView):
     model = Blog
-    template_name = 'blog/blog_list.html'
-    context_object_name = 'posts'
+    template_name = "blog/blog_list.html"
+    context_object_name = "posts"
     paginate_by = 1
 
     def get_queryset(self):

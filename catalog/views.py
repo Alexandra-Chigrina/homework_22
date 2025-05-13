@@ -1,8 +1,8 @@
-from django.core.paginator import Paginator
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
-from django.views.generic import View, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
+
 from catalog.models import Category, Product
 
 
@@ -52,6 +52,7 @@ class ProductUpdateView(UpdateView):
             self.object.image.delete(save=True)
 
         return response
+
 
 class ProductDeleteView(DeleteView):
     model = Product
