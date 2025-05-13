@@ -1,9 +1,12 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.views.generic import View, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from blog.models import Blog
+from django.core.mail import send_mail
+import os
 
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
 
 class BlogCreateView(CreateView):
     model = Blog
@@ -21,7 +24,17 @@ class BlogDetailView(DetailView):
         self.object = super().get_object(queryset)
         self.object.views_counter += 1
         self.object.save()
+
+        if self.object.views_counter == 100:
+            send_mail(
+                subject="🎉 Поздравляем! Статья набрала 100 просмотров",
+                message=f"Ваша статья «{self.object.title}» достигла 100 просмотров!",
+                from_email=None,
+                recipient_list=[os.getenv("MY_EMAIL_HOST_USER")],
+                fail_silently=False,
+            )
         return self.object
+
 
 class BlogListView(ListView):
     model = Blog
