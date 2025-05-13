@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <h1 class="mb-3">{{ post.title }}</h1>
     <p class="text-muted">Опубликовано: {{ post.created_at|date:"d.m.Y H:i" }}</p>
-    <p><strong>Просмотров:</strong> {{ post.views_count }}</p>
+    <p><strong>Просмотров:</strong> {{ post.views_counter }}</p>
 
     {% if post.preview %}
         <img src="{{ post.preview | media_filter }}" alt="{{ post.title }}" class="img-fluid mb-3 rounded">
