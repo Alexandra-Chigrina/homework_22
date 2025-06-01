@@ -1,0 +1,21 @@
+{% extends 'blog/base.html' %}
+{% load blog_tags %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">{% if object %}Редактировать статью{% else %}Создать статью{% endif %}</h1>
+    <form method="post" action="" enctype="multipart/form-data" class="form-floating">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-lg btn-block btn-outline-primary">
+            {% if object %}
+            Сохранить
+            {% else %}
+            Создать
+            {% endif %}
+        </button>
+        <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'blog:blog_list' %}" role="button">Отмена</a>
+    </form>
+
+</div>
+{% endblock %}
