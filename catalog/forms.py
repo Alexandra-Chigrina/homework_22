@@ -25,14 +25,16 @@ class ProductForm(forms.ModelForm):
 
     def clean_name(self):
         name = self.cleaned_data.get("name")
-        if any(word in name.lower() for word in forbidden_words):
-            raise ValidationError("Название не должно содержать запрещенные слова.")
+        for word in forbidden_words:
+            if word.lower() in name.lower():
+                raise ValidationError(f"Запрещено использовать слово: {word}")
         return name
 
     def clean_description(self):
         description = self.cleaned_data.get("description")
-        if any(word in description.lower() for word in forbidden_words):
-            raise ValidationError("Описание не должно содержать запрещенные слова.")
+        for word in forbidden_words:
+            if word.lower() in description.lower():
+                raise ValidationError(f"Описание содержит запрещенное слово: {word}")
         return description
 
     def clean_price(self):
@@ -40,3 +42,12 @@ class ProductForm(forms.ModelForm):
         if price < 0:
             raise ValidationError("Цена продукта не может быть отрицательной.")
         return price
+
+    def clean_image(self):
+        image = self.cleaned_data.get("image")
+        if image:
+            if image.size > 5 * 1024 * 1024:
+                raise ValidationError("Размер изображения не должен превышать 5МБ.")
+            if not image.name.lower().endswith((".jpg", ".jpeg", ".png")):
+                raise ValidationError("Файл недопустимого формата.")
+        return image
