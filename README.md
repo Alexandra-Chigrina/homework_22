@@ -144,6 +144,7 @@ blog/views.py:
 │   ├── admin.py                            # Настройка админки Django
 │   ├── views.py                            # Контроллеры отображения страниц и обработки форм
 │   ├── models.py                           # Модели Product и Category
+│   ├── forms.py                            # Кастомные формы
 │   ├── management/commands/                # Кастомные команды (load_test_products)
 │   ├── templatetags                        # Пользовательские шаблонные теги
 │       ├── catalog_tags.py                 # Кастомные фильтры шаблонов (например, media_filter)
