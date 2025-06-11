@@ -3,14 +3,14 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
 
-from catalog.models import Category, Product
 from catalog.forms import ProductForm
+from catalog.models import Category, Product
 
 
 class ProductListView(ListView):
     model = Product
-    template_name = 'catalog/product_list.html'
-    context_object_name = 'products'
+    template_name = "catalog/product_list.html"
+    context_object_name = "products"
     paginate_by = 6
 
     def get_queryset(self):
@@ -19,15 +19,15 @@ class ProductListView(ListView):
 
 class ProductDetailView(DetailView):
     model = Product
-    template_name = 'catalog/product_detail.html'
-    context_object_name = 'product'
+    template_name = "catalog/product_detail.html"
+    context_object_name = "product"
 
 
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
-    template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('catalog:product_list')
+    template_name = "catalog/product_form.html"
+    success_url = reverse_lazy("catalog:product_list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -38,8 +38,8 @@ class ProductCreateView(CreateView):
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
-    template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('catalog:product_list')
+    template_name = "catalog/product_form.html"
+    success_url = reverse_lazy("catalog:product_list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -57,8 +57,8 @@ class ProductUpdateView(UpdateView):
 
 class ProductDeleteView(DeleteView):
     model = Product
-    template_name = 'catalog/product_confirm_delete.html'
-    success_url = reverse_lazy('catalog:product_list')
+    template_name = "catalog/product_confirm_delete.html"
+    success_url = reverse_lazy("catalog:product_list")
 
 
 class ContactView(View):
