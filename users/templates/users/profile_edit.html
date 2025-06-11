@@ -2,7 +2,7 @@
 {% load catalog_tags %}
 {% block content %}
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <h1 class="display-4">Регистрация</h1>
+    <h1 class="display-4">Редактирование профиля</h1>
 </div>
 
 <div class="container mt-4">
@@ -16,7 +16,7 @@
                         {{ form.as_p }}
 
                         <button type="submit" class="btn btn-lg btn-block btn-outline-primary">
-                            Зарегистрироваться
+                            Сохранить изменения
                         </button>
                         <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'catalog:product_list' %}" role="button">Назад к каталогу</a>
                     </form>

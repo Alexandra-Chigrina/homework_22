@@ -7,7 +7,7 @@ from users.models import CustomUser
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ("email", "avatar", "phone_number", "country", "password1", "password2")
+        fields = ["email", "avatar", "phone_number", "country", "password1", "password2"]
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get("phone_number")
@@ -26,3 +26,14 @@ class CustomUserCreationForm(UserCreationForm):
         )
         self.fields["country"].widget.attrs.update({"class": "form-control", "placeholder": "Введите страну"})
         self.fields["avatar"].widget.attrs.update({"class": "form-control"})
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ["email", "avatar", "phone_number", "country"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "form-control"})
