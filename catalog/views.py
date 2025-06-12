@@ -1,33 +1,34 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
 
-from catalog.models import Category, Product
 from catalog.forms import ProductForm
+from catalog.models import Category, Product
 
 
 class ProductListView(ListView):
     model = Product
-    template_name = 'catalog/product_list.html'
-    context_object_name = 'products'
+    template_name = "catalog/product_list.html"
+    context_object_name = "products"
     paginate_by = 6
 
     def get_queryset(self):
         return Product.objects.order_by("-created_at")
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
-    template_name = 'catalog/product_detail.html'
-    context_object_name = 'product'
+    template_name = "catalog/product_detail.html"
+    context_object_name = "product"
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
-    template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('catalog:product_list')
+    template_name = "catalog/product_form.html"
+    success_url = reverse_lazy("catalog:product_list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -35,11 +36,11 @@ class ProductCreateView(CreateView):
         return context
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
-    template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('catalog:product_list')
+    template_name = "catalog/product_form.html"
+    success_url = reverse_lazy("catalog:product_list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -55,10 +56,10 @@ class ProductUpdateView(UpdateView):
         return response
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
-    template_name = 'catalog/product_confirm_delete.html'
-    success_url = reverse_lazy('catalog:product_list')
+    template_name = "catalog/product_confirm_delete.html"
+    success_url = reverse_lazy("catalog:product_list")
 
 
 class ContactView(View):

@@ -1,6 +1,7 @@
 from django import forms
-from catalog.models import Product
 from django.core.exceptions import ValidationError
+
+from catalog.models import Product
 
 forbidden_words = ["казино", "криптовалюта", "крипта", "биржа", "дешево", "бесплатно", "обман", "полиция", "радар"]
 
@@ -19,9 +20,7 @@ class ProductForm(forms.ModelForm):
         self.fields["image"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Загрузите изображение продукта"}
         )
-        self.fields["price"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Цена продукта в долларах"}
-        )
+        self.fields["price"].widget.attrs.update({"class": "form-control", "placeholder": "Цена продукта в долларах"})
 
     def clean_name(self):
         name = self.cleaned_data.get("name")

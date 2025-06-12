@@ -1,5 +1,18 @@
 <h5 class="my-0 mr-md-auto font-weight-normal">Skystore</h5>
 <nav class="ms-5">
-    <a class="p-2 btn btn-outline-primary" href="/">Каталог</a>
-    <a class="p-2 btn btn-outline-primary" href="/contacts/">Контакты</a>
+    <a class="p-2 btn btn-outline-primary me-2" href="/">Каталог</a>
+    <a class="p-2 btn btn-outline-primary me-4" href="/contacts/">Контакты</a>
+</nav>
+
+<nav class="d-flex">
+    {% if user.is_authenticated %}
+        <a href="{% url 'users:profile_edit' %}" class="p-2 btn btn-outline-primary me-2">Профиль</a>
+        <form method="post" action="{% url 'users:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="p-2 btn btn-outline-primary">Выход</button>
+        </form>
+    {% else %}
+        <a href="{% url 'users:login' %}" class="p-2 btn btn-outline-primary ms-2">Вход</a>
+        <a href="{% url 'users:register' %}" class="p-2 btn btn-outline-primary ms-2">Регистрация</a>
+    {% endif %}
 </nav>
