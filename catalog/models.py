@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import CustomUser
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name="Категория", help_text="Введите название категории")
@@ -47,6 +49,14 @@ class Product(models.Model):
     updated_at = models.DateTimeField(verbose_name="Дата последнего изменения", auto_now=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="draft", verbose_name="Статус публикации",
                               help_text="Выберите статус публикации")
+    owner = models.ForeignKey(
+        CustomUser,
+        verbose_name="Владелец",
+        on_delete=models.SET_NULL,
+        related_name="products",
+        blank=True,
+        null=True
+    )
 
     class Meta:
         verbose_name = "Продукт"
