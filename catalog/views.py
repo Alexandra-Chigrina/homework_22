@@ -1,10 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
-from django.core.exceptions import PermissionDenied
-from django.db.models import Q
 
 from catalog.forms import ProductForm, ProductModeratorForm
 from catalog.models import Category, Product
@@ -20,11 +20,9 @@ class ProductListView(ListView):
         user = self.request.user
 
         if user.is_authenticated:
-            return Product.objects.filter(
-                Q(status='published') | Q(owner=user)
-            ).order_by("-created_at")
+            return Product.objects.filter(Q(status="published") | Q(owner=user)).order_by("-created_at")
 
-        return Product.objects.filter(status='published').order_by("-created_at")
+        return Product.objects.filter(status="published").order_by("-created_at")
 
 
 class ProductDetailView(LoginRequiredMixin, DetailView):
@@ -47,7 +45,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         product = form.save()
         user = self.request.user
-        product.owner =user
+        product.owner = user
         product.save()
 
         return super().form_valid(form)

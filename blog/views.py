@@ -1,9 +1,9 @@
 import os
 
+from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
-from django.core.exceptions import PermissionDenied
 from dotenv import load_dotenv
 
 from blog.models import Blog
