@@ -16,6 +16,12 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    STATUS_CHOICES = [
+        ('draft', 'Черновик'),
+        ('published', 'Опубликовано'),
+        ('unpublished', 'Снято с публикации')
+    ]
+
     name = models.CharField(
         max_length=100, verbose_name="Наименование продукта", help_text="Введите наименование продукта"
     )
@@ -39,11 +45,16 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(verbose_name="Дата создания", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="Дата последнего изменения", auto_now=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="draft", verbose_name="Статус публикации",
+                              help_text="Выберите статус публикации")
 
     class Meta:
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
         ordering = ["name", "category"]
+        permissions = [
+            ("can_unpublish_product", "Можете отменять публикацию продукта")
+        ]
 
     def __str__(self):
         return self.name

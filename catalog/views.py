@@ -3,8 +3,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
+from django.core.exceptions import PermissionDenied
 
-from catalog.forms import ProductForm
+from catalog.forms import ProductForm, ProductModeratorForm
 from catalog.models import Category, Product
 
 
@@ -55,11 +56,28 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
         return response
 
+    def get_form_class(self):
+        user = self.request.user
+        product = self.get_object()
+        # if product.owner == user:
+        #     return ProductForm
+        if user.has_perm("catalog.can_unpublish_product"):
+            return ProductModeratorForm
+        raise PermissionDenied("У вас нет прав для редактирования этого продукта.")
+
 
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     template_name = "catalog/product_confirm_delete.html"
     success_url = reverse_lazy("catalog:product_list")
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.has_perm("catalog.can_unpublish_product"):
+            return Product.objects.all()
+
+        return Product.objects.filter(owner=user)
 
 
 class ContactView(View):
