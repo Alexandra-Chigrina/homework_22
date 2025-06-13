@@ -15,7 +15,9 @@
     </div>
 
     <a href="{% url 'blog:blog_list' %}" class="btn btn-secondary">← Назад к списку</a>
+    {% if perms.blog.can_manage_blog %}
     <a href="{% url 'blog:blog_update' post.pk %}" class="btn btn-outline-primary">Редактировать</a>
     <a href="{% url 'blog:blog_delete' post.pk %}" class="btn btn-outline-danger">Удалить</a>
+    {% endif %}
 </div>
 {% endblock %}

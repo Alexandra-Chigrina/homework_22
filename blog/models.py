@@ -26,6 +26,9 @@ class Blog(models.Model):
         verbose_name = "Блоговая запись"
         verbose_name_plural = "Блоговые записи"
         ordering = ["title"]
+        permissions = [
+            ("can_manage_blog", "Может управлять публикациями в блоге"),
+        ]
 
     def __str__(self):
         return self.title
