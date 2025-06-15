@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = True if os.getenv('DEBUG') == 'True' else False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -113,3 +113,12 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+CACHE_ENABLED = True
+if CACHE_ENABLED:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': os.getenv('LOCATION'),
+        }
+    }
