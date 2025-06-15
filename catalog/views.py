@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 from catalog.forms import ProductForm, ProductModeratorForm
 from catalog.models import Category, Product
@@ -25,6 +27,7 @@ class ProductListView(ListView):
         return Product.objects.filter(status="published").order_by("-created_at")
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = "catalog/product_detail.html"
