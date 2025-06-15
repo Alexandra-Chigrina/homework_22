@@ -1,8 +1,11 @@
+from tracemalloc import get_object_traceback
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
 from django.views.decorators.cache import cache_page
@@ -10,6 +13,24 @@ from django.utils.decorators import method_decorator
 
 from catalog.forms import ProductForm, ProductModeratorForm
 from catalog.models import Category, Product
+from catalog.services import get_products_by_category
+
+class ProductByCategoryView(View):
+    def get(self, request, category_id):
+        user = self.request.user
+        category = get_object_or_404(Category, pk=category_id)
+        products = get_products_by_category(category_id, user)
+
+        paginator = Paginator(products, 6)  # 6 товаров на страницу
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        return render(request, "catalog/products_by_category.html", {
+            "category": category,
+            "products": page_obj,
+            "page_obj": page_obj,
+        })
+
 
 
 class ProductListView(ListView):
