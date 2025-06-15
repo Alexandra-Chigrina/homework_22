@@ -9,7 +9,7 @@ forbidden_words = ["казино", "криптовалюта", "крипта", "
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ["name", "description", "image", "category", "price"]
+        fields = ["name", "description", "image", "category", "price", "status"]
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
@@ -50,3 +50,14 @@ class ProductForm(forms.ModelForm):
             if not image.name.lower().endswith((".jpg", ".jpeg", ".png")):
                 raise ValidationError("Файл недопустимого формата.")
         return image
+
+
+class ProductModeratorForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ["status"]
+
+    def __init__(self, *args, **kwargs):
+        super(ProductModeratorForm, self).__init__(*args, **kwargs)
+
+        self.fields["status"].widget.attrs.update({"class": "form-control"})

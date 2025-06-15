@@ -1,5 +1,6 @@
 import os
 
+from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
@@ -15,6 +16,11 @@ class BlogCreateView(CreateView):
     fields = ["title", "content", "preview", "is_published"]
     template_name = "blog/blog_form.html"
     success_url = reverse_lazy("blog:blog_list")
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.has_perm("blog.can_manage_blog"):
+            raise PermissionDenied("У вас нет прав на создание постов.")
+        return super().dispatch(request, *args, **kwargs)
 
 
 class BlogDetailView(DetailView):
@@ -53,6 +59,11 @@ class BlogUpdateView(UpdateView):
     fields = ["title", "content", "preview", "is_published"]
     template_name = "blog/blog_form.html"
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.has_perm("blog.can_manage_blog"):
+            raise PermissionDenied("У вас нет прав на редактирование.")
+        return super().dispatch(request, *args, **kwargs)
+
     def get_success_url(self):
         return reverse("blog:blog_detail", kwargs={"pk": self.object.pk})
 
@@ -61,3 +72,8 @@ class BlogDeleteView(DeleteView):
     model = Blog
     template_name = "blog/blog_confirm_delete.html"
     success_url = reverse_lazy("blog:blog_list")
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.has_perm("blog.can_manage_blog"):
+            raise PermissionDenied("У вас нет прав на удаление.")
+        return super().dispatch(request, *args, **kwargs)
