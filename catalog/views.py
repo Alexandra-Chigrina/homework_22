@@ -1,19 +1,20 @@
-from tracemalloc import get_object_traceback
-
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
-from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
 
 from catalog.forms import ProductForm, ProductModeratorForm
 from catalog.models import Category, Product
 from catalog.services import get_products_by_category
+from config.settings import CACHE_ENABLED
+
 
 class ProductByCategoryView(View):
     def get(self, request, category_id):
@@ -25,12 +26,15 @@ class ProductByCategoryView(View):
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
 
-        return render(request, "catalog/products_by_category.html", {
-            "category": category,
-            "products": page_obj,
-            "page_obj": page_obj,
-        })
-
+        return render(
+            request,
+            "catalog/products_by_category.html",
+            {
+                "category": category,
+                "products": page_obj,
+                "page_obj": page_obj,
+            },
+        )
 
 
 class ProductListView(ListView):
@@ -41,14 +45,28 @@ class ProductListView(ListView):
 
     def get_queryset(self):
         user = self.request.user
+        if user.is_authenticated:
+            key = f"product_list_user_{user.pk}"
+        else:
+            key = "product_list_anon"
+
+        if CACHE_ENABLED:
+            products = cache.get(key)
+            if products:
+                return products
 
         if user.is_authenticated:
-            return Product.objects.filter(Q(status="published") | Q(owner=user)).order_by("-created_at")
+            products = Product.objects.filter(Q(status="published") | Q(owner=user)).order_by("-created_at")
+        else:
+            products = Product.objects.filter(status="published").order_by("-created_at")
 
-        return Product.objects.filter(status="published").order_by("-created_at")
+        if CACHE_ENABLED:
+            cache.set(key, products, 60 * 15)
+
+        return products
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+@method_decorator(cache_page(60 * 15), name="dispatch")
 class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = "catalog/product_detail.html"

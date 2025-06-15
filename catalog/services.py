@@ -1,7 +1,7 @@
-from catalog.models import Product
 from django.core.cache import cache
 from django.db.models import Q
 
+from catalog.models import Product
 from config.settings import CACHE_ENABLED
 
 
